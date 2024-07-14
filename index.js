@@ -6,7 +6,6 @@ import Data from "./models/Data.js";
 const app = express()
 app.use(express.json());
 app.use(cors())
-const MONGO_URL = "mongodb+srv://younessayy22:Engineer2002@youness.srdvuku.mongodb.net/email?retryWrites=true&w=majority"
 const connect = async () => {
     try {
         await mongoose.connect(MONGO_URL);
