@@ -2,14 +2,17 @@ import express from "express";
 import mongoose from "mongoose";
 import cors from "cors"
 import Data from "./models/Data.js";
+import dotenv from "dotenv"
+
 
 const app = express()
 app.use(express.json());
 app.use(cors())
-const MONGO_URL = "mongodb+srv://younessayy22:Engineer2002@youness.srdvuku.mongodb.net/email?retryWrites=true&w=majority"
+dotenv.config()
+
 const connect = async () => {
     try {
-        await mongoose.connect(MONGO_URL);
+        await mongoose.connect(process.env.MONGO_URL);
         console.log("Connected to mongoDB.");
     } catch (error) {
         throw error;
@@ -42,6 +45,17 @@ app.get("/", async (req, res) => {
     }
 })
 
+app.get("/user/:id", async (req, res) => {
+    try {
+        const email = await Data.findById(req.params.id)
+        res.status(200).json(email)
+
+    } catch (error) {
+        res.status(500).json(error)
+
+    }
+})
+
 app.delete("/:id", async (req, res) => {
     try {
         await Data.findByIdAndDelete(req.params.id)
@@ -56,7 +70,7 @@ app.delete("/:id", async (req, res) => {
 
 app.put("/:id", async (req, res) => {
     try {
-        await Data.updateOne({ $set: req.body });
+        await Data.updateOne({ _id: req.params.id },{ $set: req.body });
         res.status(200).json("the account has been updated");
     } catch (err) {
         res.status(500).json(err);
